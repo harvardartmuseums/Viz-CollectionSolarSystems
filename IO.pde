@@ -30,6 +30,9 @@ void keyPressed() {
   if (keyCode == KeyEvent.VK_O) {
     playOrbit = !playOrbit;
   }
+  if (keyCode == KeyEvent.VK_M) {
+    nightMode = !nightMode;
+  }
   if (keyCode == KeyEvent.VK_ENTER) {
     saveFrame("snapshots/snapshot-####.png");
   }

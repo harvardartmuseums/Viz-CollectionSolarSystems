@@ -19,6 +19,9 @@ final int UNIVERSE_DIAMETER = 1470;
 
 int diameterOfTheCenterofTheUniverse = UNIVERSE_DIAMETER;
 int systemCount = 0;
+int skyColor = 255;
+int labelColor = 0;
+int ringColor = 0;
 Boolean showHUD = false;
 Boolean showRingLabels = false;
 Boolean showPlanetLabels = false;
@@ -27,9 +30,11 @@ Boolean showPlanets = false;
 Boolean showTheCenterOfTheUniverse = false;
 Boolean showAsStack = true;
 Boolean playOrbit = false;
+Boolean nightMode = false;
 
 void setup() {
   size(screen.width, screen.height, OPENGL);
+  
   smooth();
 
   font = createFont("Arial", 28);
@@ -53,11 +58,34 @@ void draw() {
   gl.glEnable(GL.GL_BLEND);
   
   // Define the blend mode
-  gl.glBlendFunc(GL.GL_SRC_ALPHA,GL.GL_ONE);
+  if (nightMode) {
+    skyColor = 0;
+    labelColor = 255;
+    gl.glBlendFunc(GL.GL_SRC_ALPHA,GL.GL_ONE);
+  } else {
+    skyColor = 255;
+    labelColor = 0;
+  }
   
   pgl.endGL();
   
-  background(0);
+  background(skyColor);
+  
+    // The center of the universe (aka the entire collection)
+  pushMatrix();
+  translate(0, 0, -300);
+  noStroke();
+  fill(255, 255, 0);
+  ellipse(0, 0, diameterOfTheCenterofTheUniverse, diameterOfTheCenterofTheUniverse); 
+  if (showPlanetLabels) {
+    stroke(labelColor);
+    line(0, 0, 0, 50, 50, 50);
+    fill(labelColor);
+    text("All that is, was, and will be", 50, 50, 50);
+  }  
+  popMatrix();
+  
+  
   int x;
   int z;
   if (showAsStack) {
@@ -71,18 +99,7 @@ void draw() {
     drawSystem(new PVector(i*x, 0, i*z), planets[i], diameters[i], names[i], labels[i]);
   }
   
-  // The center of the universe (aka the entire collection)
-  pushMatrix();
-  translate(0, 0, -300);
-  fill(255, 255, 0);
-  ellipse(0, 0, diameterOfTheCenterofTheUniverse, diameterOfTheCenterofTheUniverse); 
-  if (showPlanetLabels) {
-    stroke(255);
-    line(0, 0, 0, 50, 50, 50);
-    fill(255);
-    text("All that is, was, and will be", 50, 50, 50);
-  }  
-  popMatrix();
+
   
   if (showHUD) {
     cam.beginHUD();
@@ -97,6 +114,17 @@ void drawSystem(PVector origin_, int[] rings_, int d_, String name_, String[] la
   
   pushMatrix();
   translate(origin_.x, origin_.y, origin_.z);
+  
+    //the core/sun
+  noStroke();
+  fill(220, 220, 100);
+  ellipse(0, 0, diameter, diameter); 
+  if (showPlanetLabels) {
+    stroke(labelColor);
+    line(0, 0, 0, 50, 50, 50);
+    fill(labelColor);
+    text(name_, 50, 50, 50);
+  }  
   
   int seedDiameter = diameter;
   int ringSpacing = 10; //change this to widen the gap between rings; especially where there are longs of rings with a narrow thickness
@@ -132,7 +160,7 @@ void drawSystem(PVector origin_, int[] rings_, int d_, String name_, String[] la
       ellipse(x, y, rings_[i], rings_[i]);
 
       if (showRingLabels) {
-        stroke(255);
+        stroke(labelColor);
         line(x, y, 0, x+50, y+50, 50);
         text(labels_[i], x+50, y+50, 50);
       }
@@ -141,17 +169,6 @@ void drawSystem(PVector origin_, int[] rings_, int d_, String name_, String[] la
     seedDiameter = d;    
   }
   
-  //the core/sun
-  if (showPlanetLabels) {
-    stroke(255);
-    line(0, 0, 0, 50, 50, 50);
-    fill(255);
-    text(name_, 50, 50, 50);
-  }  
-  noStroke();
-  fill(220, 220, 100);
-  ellipse(0, 0, diameter, diameter); 
-
   popMatrix();
 }
 
