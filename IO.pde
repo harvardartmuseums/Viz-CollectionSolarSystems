@@ -1,39 +1,35 @@
+/* Keyboard commands
+    
+    Enter - save a snapshot of the screen
+    Left arrow - move the camera to the previous solar system
+    Right arrow - move the camera to the next solar system
+    Up arrow - 
+    Down arrow - 
+    A - rearrange the universe
+    R - record every frame to disk
+    
+*/
+
 void keyPressed() {
-  if (keyCode == KeyEvent.VK_H) {
-    showHUD = !showHUD;
-  }
-  if (keyCode == KeyEvent.VK_E) {
-    showRingLabels = !showRingLabels;
-  }
-  if (keyCode == KeyEvent.VK_L) {
-    showPlanetLabels = !showPlanetLabels;
-  } 
-  if (keyCode == KeyEvent.VK_R) {
-    showRings = !showRings;
-  }
-  if (keyCode == KeyEvent.VK_P) {
-    showPlanets = !showPlanets;
-  }
-  if (keyCode == KeyEvent.VK_UP) {
-    systemCount+=1;
-    if (systemCount > planets.length) systemCount = planets.length;
-    updateDiameterOfTheCenterOfTheUniverse();
-  }
-  if (keyCode == KeyEvent.VK_DOWN) {
-    systemCount-=1;
-    if (systemCount < 0) systemCount = 0;
-    updateDiameterOfTheCenterOfTheUniverse();
-  }
-  if (keyCode == KeyEvent.VK_D) {
-    showAsStack = !showAsStack;
-  }
-  if (keyCode == KeyEvent.VK_O) {
-    playOrbit = !playOrbit;
-  }
-  if (keyCode == KeyEvent.VK_M) {
-    nightMode = !nightMode;
-  }
+  if (keyCode == KeyEvent.VK_RIGHT) {
+    currentSystem+=1;
+    if (currentSystem > solarSystems.length-1) currentSystem = 0;
+    lookAtSystem(solarSystems[currentSystem]);
+  }  
+  if (keyCode == KeyEvent.VK_LEFT) {
+    currentSystem-=1;
+    if (currentSystem < 0) currentSystem = solarSystems.length-1;
+    lookAtSystem(solarSystems[currentSystem]);
+  }    
+  if (keyCode == KeyEvent.VK_A) {
+    arrangeUniverse(solarSystems);
+  }      
   if (keyCode == KeyEvent.VK_ENTER) {
     saveFrame("snapshots/snapshot-####.png");
-  }
+  }    
+  if (keyCode == KeyEvent.VK_R) {
+    recording = !recording;
+  }  
 }
+
+

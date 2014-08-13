@@ -1,6 +1,16 @@
 Viz-CollectionSolarSystems
 ==========================
+This is a Processing sketch that renders a collection as series of solar system and planets.
 
-This is a Processing sketch that renders a collection as series of planets and moons.
+Inspired by the [Hubble Ultra Deep Field](http://hubblesite.org/newscenter/archive/releases/2014/27/).
 
-It works with Processing 1.5.1 and requires PeasyCam
+Requirements
+------------
+
+Processing 2.*<br />
+PeasyCam<br />
+
+Demo
+----
+
+Watch it run at https://vimeo.com/103183403

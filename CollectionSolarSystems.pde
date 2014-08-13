@@ -1,198 +1,75 @@
-//reference: http://www.openprocessing.org/sketch/65139#
-
 import peasy.test.*;
 import peasy.org.apache.commons.math.*;
 import peasy.*;
 import peasy.org.apache.commons.math.geometry.*;
-
-import processing.opengl.*;
-import javax.media.opengl.*;
-
-PGraphicsOpenGL pgl;
-GL gl;
+import java.net.*;
+import java.awt.event.KeyEvent;
+import java.text.*;
+import java.util.Locale;
 
 PeasyCam cam;
 
 PFont font;
 
-final int UNIVERSE_DIAMETER = 1470;
+boolean recording = false;
 
-int diameterOfTheCenterofTheUniverse = UNIVERSE_DIAMETER;
-int systemCount = 0;
-int skyColor = 255;
-int labelColor = 0;
-int ringColor = 0;
-Boolean showHUD = false;
-Boolean showRingLabels = false;
-Boolean showPlanetLabels = false;
-Boolean showRings = false;
-Boolean showPlanets = false;
-Boolean showTheCenterOfTheUniverse = false;
-Boolean showAsStack = true;
-Boolean playOrbit = false;
-Boolean nightMode = false;
+String baseURL = "http://api.harvardartmuseums.org/object";
+String apiKey = "[YOUR-APIKEY-HERE]";
+String facetField = "classification";
+String secondaryFacetField = "century";
+
+SolarSystem[] solarSystems;
+
+int universePopulation = 0;
+int currentSystem = -1;
 
 void setup() {
-  size(screen.width, screen.height, OPENGL);
+  size(1280, 720, OPENGL);
   
   smooth();
 
   font = createFont("Arial", 28);
-  textFont(font, 28);
+  textFont(font, 200);
 
+  solarSystems = loadData();
+  arrangeUniverse(solarSystems);
+  
   cam = new PeasyCam(this, 200);
 }
 
-void draw() {  
-  //include some additive blending
-  //see http://www.flight404.com/blog/?p=71
-  pgl = (PGraphicsOpenGL) g;
-  gl = pgl.gl;
+void draw() {
+  //the default text size unless specified before calling text()
+  textSize(200);
+  perspective(PI/3.0, (float) width/height, 1, 1000000);
+  background(#ffffff);
   
-  pgl.beginGL();
-
-  // This fixes the overlap issue
-  gl.glDisable(GL.GL_DEPTH_TEST);
-  
-  // Turn on the blend mode
-  gl.glEnable(GL.GL_BLEND);
-  
-  // Define the blend mode
-  if (nightMode) {
-    skyColor = 0;
-    labelColor = 255;
-    gl.glBlendFunc(GL.GL_SRC_ALPHA,GL.GL_ONE);
-  } else {
-    skyColor = 255;
-    labelColor = 0;
+  for(int i=0; i<solarSystems.length; i++) {
+    solarSystems[i].render(i==currentSystem);
   }
   
-  pgl.endGL();
-  
-  background(skyColor);
-  
-    // The center of the universe (aka the entire collection)
-  pushMatrix();
-  translate(0, 0, -300);
-  noStroke();
-  fill(255, 255, 0);
-  ellipse(0, 0, diameterOfTheCenterofTheUniverse, diameterOfTheCenterofTheUniverse); 
-  if (showPlanetLabels) {
-    stroke(labelColor);
-    line(0, 0, 0, 50, 50, 50);
-    fill(labelColor);
-    text("All that is, was, and will be", 50, 50, 50);
+  cam.beginHUD();
+  fill(120);
+  if (currentSystem > -1) {
+    textSize(16);
+    text("Universe Population: " + NumberFormat.getNumberInstance(Locale.US).format(universePopulation) + "\n\n" +
+          "System: " + solarSystems[currentSystem].name + "\n" + 
+          "Total Population: " + NumberFormat.getNumberInstance(Locale.US).format(solarSystems[currentSystem].population) + "\n" +
+          "Total Planets: " + solarSystems[currentSystem].planets.length, 10, 20);
   }  
-  popMatrix();
+  cam.endHUD();
   
-  
-  int x;
-  int z;
-  if (showAsStack) {
-    z = 300;
-    x = 0;
-  } else {
-    z = 0;
-    x = 2000;
-  }
-  for (int i=0; i<systemCount; i++) {
-    drawSystem(new PVector(i*x, 0, i*z), planets[i], diameters[i], names[i], labels[i]);
-  }
-  
-
-  
-  if (showHUD) {
-    cam.beginHUD();
-    fill(255);
-    text("The universe organized by classification", 10, height-15);  
-    cam.endHUD();
-  }
-}
-
-void drawSystem(PVector origin_, int[] rings_, int d_, String name_, String[] labels_) {
-  int diameter = d_;
-  
-  pushMatrix();
-  translate(origin_.x, origin_.y, origin_.z);
-  
-    //the core/sun
-  noStroke();
-  fill(220, 220, 100);
-  ellipse(0, 0, diameter, diameter); 
-  if (showPlanetLabels) {
-    stroke(labelColor);
-    line(0, 0, 0, 50, 50, 50);
-    fill(labelColor);
-    text(name_, 50, 50, 50);
+  if (recording) {
+    saveFrame("output/frames####.png");
   }  
-  
-  int seedDiameter = diameter;
-  int ringSpacing = 10; //change this to widen the gap between rings; especially where there are longs of rings with a narrow thickness
-  //the rings
-  for (int i=0; i<rings_.length; i++) {
-    int c = 200/rings_.length;
-    int d = seedDiameter + (ringSpacing * rings_[i]);
-    int r = d/2;
-
-    //the ring
-    if (showRings) {
-      noFill();
-      stroke(20+i*c);
-      ellipse(0, 0, d, d);
-    }
-    
-    //the planet on the ring
-    if (showPlanets) {
-      
-      float x = 0.0f;
-      float y = 0.0f;
-      
-      if (playOrbit) {
-        x = cos(radians(frameCount*.05)+rings_[i]) * r;
-        y = sin(radians(frameCount*.05)+rings_[i]) * r;    
-      } else {
-        x = cos(rings_[i]) * r;
-        y = sin(rings_[i]) * r;
-      }
-      
-      noStroke();
-      fill(20+i*c);
-      ellipse(x, y, rings_[i], rings_[i]);
-
-      if (showRingLabels) {
-        stroke(labelColor);
-        line(x, y, 0, x+50, y+50, 50);
-        text(labels_[i], x+50, y+50, 50);
-      }
-    }
-    
-    seedDiameter = d;    
-  }
-  
-  popMatrix();
 }
 
-void updateDiameterOfTheCenterOfTheUniverse() {
-  diameterOfTheCenterofTheUniverse = UNIVERSE_DIAMETER;
-  for (int i=0; i<systemCount; i++) {  
-    diameterOfTheCenterofTheUniverse-=diameters[i];
+void arrangeUniverse(SolarSystem[] _solarSystems) {  
+  for(int i=0; i<_solarSystems.length; i++) {
+//    _solarSystems[i].setLocation(new PVector(0, 0, i*1000));
+    _solarSystems[i].setLocation(new PVector(random(-25000,25000), random(-25000,25000),  random(-25000,25000)));
   }
 }
 
-//See http://studio.sketchpad.cc/sp/pad/view/ro.9gL97JYgiuy3$/rev.176
-void ring(float radB, float radS, float offsetX, float offsetY) {
-    beginShape(QUAD_STRIP);
-    int precision = (int)ceil(TWO_PI * radB / 5);
-    for(int i = 0; i <= precision; i++) {
-        float angleB = map(i, 0, precision, 0, TWO_PI);
-        float xB = radB * cos(angleB),
-              yB = radB * sin(angleB);
-        float angleS = atan2(-(offsetY - yB), -(offsetX - xB));
-        vertex(xB, yB);
-        vertex(offsetX + radS * cos(angleS), offsetY + radS * sin(angleS));
-        fill(0, 200, 0, (i/(precision*.3))*i+40);
-    }
-    endShape();
+void lookAtSystem(SolarSystem _solarSystem) {
+  cam.lookAt(_solarSystem.location.x, _solarSystem.location.y, _solarSystem.location.z, 4000, 1000);
 }
-
-
