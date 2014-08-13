@@ -9,6 +9,7 @@ Requirements
 
 Processing 2.*<br />
 PeasyCam<br />
+Harvard Art Museums [API Key](http://api.harvardartmuseums.org/)<br />
 
 Demo
 ----
