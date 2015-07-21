@@ -7,6 +7,7 @@
     Down arrow - 
     A - rearrange the universe
     R - record every frame to disk
+    M - show or hide the mouse
     
 */
 
@@ -30,6 +31,9 @@ void keyPressed() {
   if (keyCode == KeyEvent.VK_R) {
     recording = !recording;
   }  
+  if (keyCode == KeyEvent.VK_M) {
+    showMouse = !showMouse;
+  }   
 }
 
 

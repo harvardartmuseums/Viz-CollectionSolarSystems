@@ -12,6 +12,7 @@ PeasyCam cam;
 PFont font;
 
 boolean recording = false;
+boolean showMouse = false;
 
 String baseURL = "http://api.harvardartmuseums.org/object";
 String apiKey = "[YOUR-APIKEY-HERE]";
@@ -38,6 +39,12 @@ void setup() {
 }
 
 void draw() {
+  if (showMouse) {
+    cursor();
+  } else {
+    noCursor();
+  }
+    
   //the default text size unless specified before calling text()
   textSize(200);
   perspective(PI/3.0, (float) width/height, 1, 1000000);
