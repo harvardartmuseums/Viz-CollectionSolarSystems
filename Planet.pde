@@ -47,7 +47,7 @@ public class Planet {
     if (showLabel) {
       stroke(0);
       line(x, y, 0, x+50, y+50, 50);
-      fill(0);
+      fill(20+(2.5*position));
       textSize(150);
       text(this.name, x+50, y+50, 50);   
     }
