@@ -45,7 +45,7 @@ public class Planet {
   
     //the planet label
     if (showLabel) {
-      stroke(0);
+      stroke(20+(2.5*position));
       line(x, y, 0, x+50, y+50, 50);
       fill(20+(2.5*position));
       textSize(150);
