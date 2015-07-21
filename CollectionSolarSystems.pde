@@ -16,7 +16,7 @@ boolean showMouse = false;
 
 String baseURL = "http://api.harvardartmuseums.org/object";
 String apiKey = "[YOUR-APIKEY-HERE]";
-String facetField = "classification";
+String facetField = "classification.exact";
 String secondaryFacetField = "century";
 
 SolarSystem[] solarSystems;
