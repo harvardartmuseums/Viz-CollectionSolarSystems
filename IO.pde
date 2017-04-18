@@ -34,6 +34,7 @@ void keyPressed() {
   if (keyCode == KeyEvent.VK_M) {
     showMouse = !showMouse;
   }   
+  if (keyCode == KeyEvent.VK_F) {
+    focusMode = !focusMode;
+  }    
 }
-
-

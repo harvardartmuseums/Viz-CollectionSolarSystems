@@ -13,6 +13,7 @@ PFont font;
 
 boolean recording = false;
 boolean showMouse = false;
+boolean focusMode = false;
 
 String baseURL = "http://api.harvardartmuseums.org/object";
 String apiKey = "[YOUR-APIKEY-HERE]";
@@ -50,8 +51,12 @@ void draw() {
   perspective(PI/3.0, (float) width/height, 1, 1000000);
   background(#ffffff);
   
-  for(int i=0; i<solarSystems.length; i++) {
-    solarSystems[i].render(i==currentSystem);
+  if (focusMode && (currentSystem > -1)) {
+    solarSystems[currentSystem].render(true);
+  } else {
+    for(int i=0; i<solarSystems.length; i++) {
+      solarSystems[i].render(i==currentSystem);
+    }
   }
   
   cam.beginHUD();
