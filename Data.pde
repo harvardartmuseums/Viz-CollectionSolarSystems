@@ -2,7 +2,7 @@ JSONObject loadTheUniverse() {
   JSONObject json;
   String url = baseURL + "?apikey=" + apiKey;
   
-  url+= "&size=0&aggregation={\"by_classification\":{\"terms\":{\"field\":\"classification.exact\",\"size\":0},\"aggs\":{\"by_century\":{\"terms\":{\"field\":\"century\",\"size\":0}}}}}"; 
+  url+= "&size=0&aggregation={\"the_suns\":{\"terms\":{\"field\":\"" + sunsField + "\",\"size\":0},\"aggs\":{\"the_planets\":{\"terms\":{\"field\":\"" + planetsField + "\",\"size\":0}}}}}"; 
   
   json = loadJSONObject(url);
   
@@ -21,7 +21,7 @@ SolarSystem[] loadData() {
   universePopulation = totalRecords;
   
   JSONObject facets = data.getJSONObject("aggregations");
-  JSONObject facet = facets.getJSONObject("by_classification");
+  JSONObject facet = facets.getJSONObject("the_suns");
   JSONArray terms = facet.getJSONArray("buckets");  
     
   solarSystems_ = new SolarSystem[terms.size()];
@@ -34,7 +34,7 @@ SolarSystem[] loadData() {
     solarSystems_[i] = solarSystem;
     
     // Load the planets and add them to the solar system
-    JSONObject planetData = term.getJSONObject("by_century");
+    JSONObject planetData = term.getJSONObject("the_planets");
      
     int totalPlanetRecords = term.getInt("doc_count");
     
