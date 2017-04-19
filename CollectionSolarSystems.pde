@@ -14,27 +14,32 @@ PFont font;
 boolean recording = false;
 boolean showMouse = false;
 boolean focusMode = false;
+boolean showHUD = true;
 
 String baseURL = "http://api.harvardartmuseums.org/object";
 String apiKey = "[YOUR-APIKEY-HERE]";
-String sunsField = "classification.exact";
-String planetsField = "century";
+String[][] multiverse = {
+            {"classification.exact", "century"}, 
+            {"gallery.gallerynumber", "classification.exact"}, 
+            {"century", "classification.exact"},
+            {"division", "century"}
+          };
 
 SolarSystem[] solarSystems;
 
 int universePopulation = 0;
+int currentUniverse = 0;
 int currentSystem = -1;
 
 void setup() {
-  size(1280, 720, OPENGL);
+  fullScreen(P3D, 2);
   
   smooth();
 
   font = createFont("Arial", 28);
   textFont(font, 200);
 
-  solarSystems = loadData();
-  arrangeUniverse(solarSystems);
+  createUniverse();
   
   cam = new PeasyCam(this, 200);
 }
@@ -59,20 +64,35 @@ void draw() {
     }
   }
   
-  cam.beginHUD();
-  fill(120);
-  if (currentSystem > -1) {
-    textSize(16);
-    text("Universe Population: " + NumberFormat.getNumberInstance(Locale.US).format(universePopulation) + "\n\n" +
-          "System: " + solarSystems[currentSystem].name + "\n" + 
-          "Total Population: " + NumberFormat.getNumberInstance(Locale.US).format(solarSystems[currentSystem].population) + "\n" +
-          "Total Planets: " + solarSystems[currentSystem].planets.length, 10, 20);
-  }  
-  cam.endHUD();
+  if (showHUD) {
+    cam.beginHUD();
+    fill(120);
+    if (currentSystem > -1) {
+      textSize(16);
+      String planetList = "Planets: " + "\n";
+      for (int i=0; i<solarSystems[currentSystem].planets.length; i++) {
+        planetList += solarSystems[currentSystem].planets[i].name + ": " + NumberFormat.getNumberInstance(Locale.US).format(solarSystems[currentSystem].planets[i].population) + "\n";
+      }
+      
+      text("Universe Population: " + NumberFormat.getNumberInstance(Locale.US).format(universePopulation) + "\n" +  
+            "Total Systems: " + NumberFormat.getNumberInstance(Locale.US).format(solarSystems.length) + "\n\n" +
+            "System: " + solarSystems[currentSystem].name + "\n" + 
+            "Total Population: " + NumberFormat.getNumberInstance(Locale.US).format(solarSystems[currentSystem].population) + "\n" +
+            "Total Planets: " + solarSystems[currentSystem].planets.length + "\n\n" + 
+            planetList, 10, 20);
+    }  
+    cam.endHUD();
+  }
   
   if (recording) {
     saveFrame("output/frames####.png");
   }  
+}
+
+void createUniverse() {
+  currentSystem = -1;
+  solarSystems = loadData();
+  arrangeUniverse(solarSystems);
 }
 
 void arrangeUniverse(SolarSystem[] _solarSystems) {  

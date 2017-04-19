@@ -6,8 +6,10 @@
     Up arrow - 
     Down arrow - 
     A - rearrange the universe
+    F - focus mode; focus on the selected system by hiding all other systems
     R - record every frame to disk
     M - show or hide the mouse
+    U - cycle through the multiverse
     
 */
 
@@ -36,5 +38,13 @@ void keyPressed() {
   }   
   if (keyCode == KeyEvent.VK_F) {
     focusMode = !focusMode;
+  }    
+  if (keyCode == KeyEvent.VK_U) {
+    currentUniverse+=1;
+    if (currentUniverse > multiverse.length-1) currentUniverse = 0;
+    createUniverse();
+  }    
+  if (keyCode == KeyEvent.VK_I) {
+    showHUD = !showHUD;
   }    
 }

@@ -2,7 +2,7 @@ JSONObject loadTheUniverse() {
   JSONObject json;
   String url = baseURL + "?apikey=" + apiKey;
   
-  url+= "&size=0&aggregation={\"the_suns\":{\"terms\":{\"field\":\"" + sunsField + "\",\"size\":0},\"aggs\":{\"the_planets\":{\"terms\":{\"field\":\"" + planetsField + "\",\"size\":0}}}}}"; 
+  url+= "&size=0&aggregation={\"the_suns\":{\"terms\":{\"field\":\"" + multiverse[currentUniverse][0] + "\",\"size\":0},\"aggs\":{\"the_planets\":{\"terms\":{\"field\":\"" + multiverse[currentUniverse][1] + "\",\"size\":0}}}}}"; 
   
   json = loadJSONObject(url);
   
@@ -18,7 +18,7 @@ SolarSystem[] loadData() {
   JSONObject info = data.getJSONObject("info");
   int totalRecords = info.getInt("totalrecords");
   
-  universePopulation = totalRecords;
+  universePopulation = 0;
   
   JSONObject facets = data.getJSONObject("aggregations");
   JSONObject facet = facets.getJSONObject("the_suns");
@@ -28,6 +28,8 @@ SolarSystem[] loadData() {
   
   for(int i=0; i<terms.size(); i++) {
     JSONObject term = terms.getJSONObject(i); 
+    
+    universePopulation += term.getInt("doc_count");
     
     SolarSystem solarSystem = new SolarSystem(term.getString("key"), map(term.getInt("doc_count"), 0, totalRecords, 0, 5000), term.getInt("doc_count"));
 
