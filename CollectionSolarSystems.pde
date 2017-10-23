@@ -36,7 +36,7 @@ void setup() {
   
   smooth();
 
-  font = createFont("Arial", 28);
+  font = createFont("Arial", 100);
   textFont(font, 200);
 
   createUniverse();
