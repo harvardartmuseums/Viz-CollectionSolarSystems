@@ -7,9 +7,12 @@ Inspired by the [Hubble Ultra Deep Field](http://hubblesite.org/newscenter/archi
 Requirements
 ------------
 
-Processing 2.*<br />
-PeasyCam<br />
-Harvard Art Museums [API Key](http://api.harvardartmuseums.org/)<br />
+Install the following software and libraries:  
+
+[Processing 3.*](https://processing.org/)  
+[PeasyCam](http://mrfeinberg.com/peasycam/)   
+
+Get a key for the [Harvard Art Museums API](https://www.harvardartmuseums.org/collections/api)  
 
 Demo
 ----
