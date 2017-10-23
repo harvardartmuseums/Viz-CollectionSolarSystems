@@ -16,7 +16,7 @@ boolean showMouse = false;
 boolean focusMode = false;
 boolean showHUD = true;
 
-String baseURL = "http://api.harvardartmuseums.org/object";
+String baseURL = "https://api.harvardartmuseums.org/object";
 String apiKey = "[YOUR-APIKEY-HERE]";
 String[][] multiverse = {
             {"classification.exact", "century"}, 
