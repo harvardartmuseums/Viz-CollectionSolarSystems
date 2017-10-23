@@ -31,6 +31,10 @@ public class SolarSystem {
   
   public void setLocation(PVector _location) {
     this.location = _location;
+    
+    for (int i=0; i<planets.length; i++) {      
+      planets[i].setLocation(_location);
+    }
   }
  
   public void render() {

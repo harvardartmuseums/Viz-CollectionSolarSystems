@@ -6,6 +6,8 @@ public class Planet {
   int position;
   int population;
   
+  PVector location;
+  
   float x = 0.0f;
   float y = 0.0f;
   
@@ -22,10 +24,20 @@ public class Planet {
     radius = _radius;
     diameter = radius*2;
   }
-  
+
+  public void setLocation(PVector _location) {
+    this.location = new PVector();
+    this.location.x = _location.x;
+    this.location.y = _location.y;
+    this.location.z = _location.z;
+  }
+ 
   public void updateOrbit() {
     x = cos(radians(frameCount*.05)+this.size) * this.radius;
-    y = sin(radians(frameCount*.05)+this.size) * this.radius;      
+    y = sin(radians(frameCount*.05)+this.size) * this.radius;   
+    
+    this.location.x += x;
+    this.location.y += y;
   }
   
   public void render() {
