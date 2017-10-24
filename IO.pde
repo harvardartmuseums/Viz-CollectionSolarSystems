@@ -10,6 +10,7 @@
     R - record every frame to disk
     M - show or hide the mouse
     U - cycle through the multiverse
+    N - toggle day/night mode
     
 */
 
@@ -36,6 +37,12 @@ void keyPressed() {
   if (keyCode == KeyEvent.VK_M) {
     showMouse = !showMouse;
   }   
+  if (keyCode == KeyEvent.VK_N) {
+    nightMode = !nightMode;
+    for(int i=0; i<solarSystems.length; i++) {
+      solarSystems[i].setColorScheme();
+    }
+  } 
   if (keyCode == KeyEvent.VK_F) {
     focusMode = !focusMode;
   }    

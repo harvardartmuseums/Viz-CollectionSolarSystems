@@ -15,6 +15,7 @@ boolean recording = false;
 boolean showMouse = false;
 boolean focusMode = false;
 boolean showHUD = true;
+boolean nightMode = false;
 
 String baseURL = "https://api.harvardartmuseums.org/object";
 String apiKey = "[YOUR-APIKEY-HERE]";
@@ -54,7 +55,11 @@ void draw() {
   //the default text size unless specified before calling text()
   textSize(200);
   perspective(PI/3.0, (float) width/height, 1, 1000000);
-  background(#ffffff);
+  if (nightMode) {
+    background(#000000);
+  } else {
+    background(#ffffff);
+  }
   
   if (focusMode && (currentSystem > -1)) {
     solarSystems[currentSystem].render(true);

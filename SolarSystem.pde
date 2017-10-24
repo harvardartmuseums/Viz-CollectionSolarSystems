@@ -4,6 +4,8 @@ public class SolarSystem {
   int population;
   Planet[] planets;
   
+  int colorScheme = 0;
+  
   PVector location;
   
   //The space between the sun and the first planet
@@ -37,6 +39,20 @@ public class SolarSystem {
     }
   }
  
+  public void setColorScheme() {
+    if (colorScheme == 0) {
+      colorScheme = 255;
+    } else {
+      colorScheme = 0;  
+    }
+  }
+ 
+  public void update() {
+    location.x +=1;
+    location.y +=1;
+    location.z +=1;
+  }
+ 
   public void render() {
    this.render(false);
   } 
@@ -52,9 +68,9 @@ public class SolarSystem {
     ellipse(0, 0, this.size, this.size); 
 
     //the name label
-    stroke(0);
+    stroke(colorScheme);
     line(0, 0, 0, 50, 50, 50);
-    fill(0);
+    fill(colorScheme);
     text(this.name, 50, 50, 50);
 
     for (int i=0; i<planets.length; i++) {
